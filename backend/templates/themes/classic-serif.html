@@ -1,0 +1,39 @@
+{% import "_macros.html" as m %}
+{% set c = r.contact %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ c.name or "Resume" }}</title>
+<style>
+{% include "_base.css" %}
+@page { size: A4; margin: 15mm 17mm; }
+@media screen { .page { padding: 15mm 17mm; } }
+
+body { font-family: Georgia, "Times New Roman", "Liberation Serif", Times, serif; font-size: 10.4pt; line-height: 1.36; color: #000; }
+.header { text-align: center; }
+.name { font-size: 20pt; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.contact { margin-top: 1.5mm; font-size: 9.6pt; }
+.section { margin-top: 4.6mm; }
+h2 { font-size: 10.6pt; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; border-bottom: .8pt solid #000; padding-bottom: .8mm; margin-bottom: 2.2mm; }
+.entry-title { font-weight: 700; }
+.entry-org { font-weight: 400; font-style: italic; }
+.entry-sub { font-style: italic; }
+.skill-group strong { font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="header">
+    {% if c.name %}<h1 class="name">{{ c.name }}</h1>{% endif %}
+    <p class="contact">{{ m.contact_inline(c) }}</p>
+  </header>
+  {{ m.summary(r) }}
+  {{ m.experience(r) }}
+  {{ m.education(r) }}
+  {{ m.skills(r) }}
+  {{ m.projects(r) }}
+  {{ m.accomplishments(r) }}
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+{# Shared section markup. Themes differ in layout and CSS; the ATS-relevant structure
+   (real text, standard headings, no layout tables) is identical across all of them. #}
+
+{% macro link(l) -%}
+{% set href = l.url|safe_url %}
+{% if href %}<a href="{{ href }}">{{ l.label or (l.url|display_url) }}</a>{% else %}{{ l.label or l.url }}{% endif %}
+{%- endmacro %}
+
+{% macro contact_inline(c, sep=" | ") -%}
+{% set items = [c.location, c.phone, c.email]|select|list %}
+{% set links = c.links|selectattr("url")|list %}
+{{ items|join(sep) }}{% if items and links %}{{ sep }}{% endif %}{% for l in links %}{{ link(l) }}{% if not loop.last %}{{ sep }}{% endif %}{% endfor %}
+{%- endmacro %}
+
+{% macro bullets(items) -%}
+{% if items %}
+<ul class="bullets">
+{% for b in items %}
+  <li>{{ b }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{%- endmacro %}
+
+{% macro summary(r) -%}
+{% if r.summary %}
+<section class="section summary">
+  <h2>Summary</h2>
+  <p>{{ r.summary }}</p>
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro skills(r) -%}
+{% if r.skills %}
+<section class="section skills">
+  <h2>Skills</h2>
+  {% for g in r.skills if g.items %}
+  <p class="skill-group">{% if g.category %}<strong>{{ g.category }}:</strong> {% endif %}{{ g.items|join(", ") }}</p>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro experience(r) -%}
+{% if r.experience %}
+<section class="section experience">
+  <h2>Experience</h2>
+  {% for e in r.experience %}
+  <div class="entry">
+    <div class="entry-head">
+      <h3 class="entry-title">{{ e.title }}{% if e.company %}<span class="entry-org">{% if e.title %}, {% endif %}{{ e.company }}</span>{% endif %}</h3>
+      <span class="entry-meta">{{ date_range(e.start, e.end) }}</span>
+    </div>
+    {% if e.location %}<div class="entry-sub">{{ e.location }}</div>{% endif %}
+    {{ bullets(e.bullets) }}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro projects(r) -%}
+{% if r.projects %}
+<section class="section projects">
+  <h2>Projects</h2>
+  {% for p in r.projects %}
+  <div class="entry">
+    <h3 class="entry-title">{{ p.name }}</h3>
+    {% if p.stack %}<div class="entry-sub">{{ p.stack }}</div>{% endif %}
+    {{ bullets(p.bullets) }}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro education(r) -%}
+{% if r.education %}
+<section class="section education">
+  <h2>Education</h2>
+  {% for ed in r.education %}
+  <div class="entry">
+    <div class="entry-head">
+      <h3 class="entry-title">{{ ed.degree or ed.institution }}</h3>
+      {% if ed.date %}<span class="entry-meta">{{ ed.date }}</span>{% endif %}
+    </div>
+    {% if ed.degree and ed.institution %}<div class="entry-sub">{{ ed.institution }}</div>{% endif %}
+    {% if ed.gpa %}<div class="entry-sub">GPA: {{ ed.gpa }}</div>{% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endif %}
+{%- endmacro %}
+
+{% macro accomplishments(r) -%}
+{% if r.accomplishments %}
+<section class="section accomplishments">
+  <h2>Accomplishments</h2>
+  {{ bullets(r.accomplishments) }}
+</section>
+{% endif %}
+{%- endmacro %}

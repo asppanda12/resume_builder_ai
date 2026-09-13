@@ -1,0 +1,40 @@
+{% import "_macros.html" as m %}
+{% set c = r.contact %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ c.name or "Resume" }}</title>
+<style>
+{% include "_base.css" %}
+@page { size: A4; margin: 16mm 18mm; }
+@media screen { .page { padding: 16mm 18mm; } }
+
+body { font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif; font-size: 9.6pt; line-height: 1.5; color: #262b33; }
+.header { margin-bottom: 2mm; }
+.name { font-size: 26pt; font-weight: 300; letter-spacing: -.01em; color: #111827; line-height: 1.1; }
+.contact { margin-top: 2mm; font-size: 9pt; color: #5b6472; }
+.section { margin-top: 6.5mm; }
+h2 { font-size: 8.4pt; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #3b5bdb; padding-bottom: 1.5mm; border-bottom: .5pt solid #d5d9e0; margin-bottom: 3mm; }
+.entry { margin-bottom: 4.2mm; }
+.entry-title { font-size: 10pt; font-weight: 600; color: #111827; }
+.entry-org { font-weight: 400; color: #5b6472; }
+.entry-meta, .entry-sub { font-size: 8.8pt; color: #6b7380; }
+.skill-group strong { font-weight: 600; color: #111827; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="header">
+    {% if c.name %}<h1 class="name">{{ c.name }}</h1>{% endif %}
+    <p class="contact">{{ m.contact_inline(c, "  ·  ") }}</p>
+  </header>
+  {{ m.summary(r) }}
+  {{ m.skills(r) }}
+  {{ m.experience(r) }}
+  {{ m.projects(r) }}
+  {{ m.education(r) }}
+  {{ m.accomplishments(r) }}
+</div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% import "_macros.html" as m %}
+{% set c = r.contact %}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ c.name or "Resume" }}</title>
+<style>
+{% include "_base.css" %}
+/* The green column is painted by the page background, so it continues on every PDF page. */
+@page { size: A4; margin: 12mm 0; background: linear-gradient(to right, #1f4e3d 0, #1f4e3d 31%, #ffffff 31%); }
+@media screen { .page { padding: 12mm 0; background: linear-gradient(to right, #1f4e3d 0, #1f4e3d 31%, #ffffff 31%); } }
+
+body { font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif; font-size: 9.4pt; line-height: 1.42; color: #1d2733; }
+.page::after { content: ""; display: block; clear: both; }
+
+.sidebar { float: left; width: 31%; padding: 0 6mm 0 8mm; color: #e4efe9; }
+.sidebar .section { margin-bottom: 6mm; }
+.sidebar h2 { font-size: 8.8pt; letter-spacing: .12em; text-transform: uppercase; color: #9fd3b8; border-bottom: .6pt solid rgba(255, 255, 255, .3); padding-bottom: 1mm; margin-bottom: 2.2mm; }
+.sidebar ul.plain li { margin-bottom: 1.2mm; overflow-wrap: anywhere; }
+.sidebar .skill-group { margin-bottom: 2.4mm; }
+.sidebar .skill-group strong { display: block; color: #fff; }
+.sidebar .entry-head { display: block; }
+.sidebar .entry-title { color: #fff; }
+.sidebar .entry-meta, .sidebar .entry-sub { display: block; color: #c5ddd0; font-size: 8.6pt; }
+.sidebar .entry { margin-bottom: 2.6mm; }
+
+.main { margin-left: 31%; padding: 0 10mm 0 8mm; }
+.name { font-size: 24pt; font-weight: 700; color: #1f4e3d; line-height: 1.1; margin-bottom: 1mm; }
+.main .section { margin-top: 5mm; }
+.main h2 { font-size: 10.4pt; text-transform: uppercase; letter-spacing: .1em; color: #1f4e3d; border-bottom: 1.2pt solid #2f7a5b; padding-bottom: 1mm; margin-bottom: 2.6mm; }
+.main .entry-title { font-size: 10pt; font-weight: 700; }
+.main .entry-org { font-weight: 400; color: #2f7a5b; }
+.main .entry-meta { font-size: 8.8pt; color: #56616e; }
+.main .entry-sub { font-size: 8.8pt; color: #56616e; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="page">
+  <aside class="sidebar">
+    {% if c.location or c.phone or c.email or c.links %}
+    <section class="section contact">
+      <h2>Contact</h2>
+      <ul class="plain">
+        {% for v in [c.location, c.phone, c.email] if v %}
+        <li>{{ v }}</li>
+        {% endfor %}
+        {% for l in c.links if l.url %}
+        <li>{{ m.link(l) }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+    {{ m.skills(r) }}
+    {{ m.education(r) }}
+  </aside>
+  <main class="main">
+    {% if c.name %}<h1 class="name">{{ c.name }}</h1>{% endif %}
+    {{ m.summary(r) }}
+    {{ m.experience(r) }}
+    {{ m.projects(r) }}
+    {{ m.accomplishments(r) }}
+  </main>
+</div>
+</body>
+</html>

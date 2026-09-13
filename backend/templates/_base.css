@@ -1,0 +1,21 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+h1, h2, h3, p, ul { margin: 0; }
+h3 { font-size: inherit; }
+a { color: inherit; text-decoration: none; }
+h2 { break-after: avoid; page-break-after: avoid; }
+ul.plain { list-style: none; padding: 0; }
+ul.bullets { padding-left: 1.15em; margin-top: 1.2mm; }
+ul.bullets li { margin-bottom: 0.7mm; }
+.entry { margin-bottom: 3.4mm; break-inside: avoid; page-break-inside: avoid; }
+.entry:last-child { margin-bottom: 0; }
+.entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+.entry-meta { white-space: nowrap; flex-shrink: 0; }
+.skill-group { margin-bottom: 1.2mm; }
+
+/* On-screen preview shows an A4 sheet. WeasyPrint renders print media, so none of this reaches the PDF. */
+@media screen {
+  body { background: #d5d9de; padding: 24px 0; }
+  .page { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; box-shadow: 0 2px 14px rgba(0, 0, 0, .18); }
+}
