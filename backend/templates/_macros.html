@@ -85,8 +85,8 @@
       <h3 class="entry-title">{{ ed.degree or ed.institution }}</h3>
       {% if ed.date %}<span class="entry-meta">{{ ed.date }}</span>{% endif %}
     </div>
-    {% if ed.degree and ed.institution %}<div class="entry-sub">{{ ed.institution }}</div>{% endif %}
-    {% if ed.gpa %}<div class="entry-sub">GPA: {{ ed.gpa }}</div>{% endif %}
+    {% set sub = [ed.institution if ed.degree else "", "GPA: " ~ ed.gpa if ed.gpa else ""]|select|list %}
+    {% if sub %}<div class="entry-sub">{{ sub|join(" · ") }}</div>{% endif %}
   </div>
   {% endfor %}
 </section>

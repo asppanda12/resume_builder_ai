@@ -7,15 +7,20 @@
 <title>{{ c.name or "Resume" }}</title>
 <style>
 {% include "_base.css" %}
-@page { size: A4; margin: 15mm 17mm; }
-@media screen { .page { padding: 15mm 17mm; } }
+@page { size: A4; margin: 12mm 15mm; }
+@media screen { .page { padding: 12mm 15mm; } }
 
-body { font-family: Georgia, "Times New Roman", "Liberation Serif", Times, serif; font-size: 10.4pt; line-height: 1.36; color: #000; }
+/* Sized so a three-role, one-project resume fits one A4 page without dropping below ~9.5pt. */
+body { font-family: Georgia, "Times New Roman", "Liberation Serif", Times, serif; font-size: 9.8pt; line-height: 1.28; color: #000; }
 .header { text-align: center; }
-.name { font-size: 20pt; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-.contact { margin-top: 1.5mm; font-size: 9.6pt; }
-.section { margin-top: 4.6mm; }
-h2 { font-size: 10.6pt; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; border-bottom: .8pt solid #000; padding-bottom: .8mm; margin-bottom: 2.2mm; }
+.name { font-size: 18pt; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.contact { margin-top: 1mm; font-size: 9.4pt; }
+.section { margin-top: 3.4mm; }
+h2 { font-size: 10.2pt; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; border-bottom: .8pt solid #000; padding-bottom: .6mm; margin-bottom: 1.6mm; }
+ul.bullets { margin-top: .8mm; }
+ul.bullets li { margin-bottom: .4mm; }
+.entry { margin-bottom: 2.4mm; }
+.skill-group { margin-bottom: .6mm; }
 .entry-title { font-weight: 700; }
 .entry-org { font-weight: 400; font-style: italic; }
 .entry-sub { font-style: italic; }
