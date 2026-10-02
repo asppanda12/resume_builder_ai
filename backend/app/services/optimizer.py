@@ -7,6 +7,8 @@ OPTIMIZE_MODE picks the interpretation:
 - "gate": the threshold is a quality gate. Only a resume that already meets it gets a single
   polish pass; below it the request is declined with suggestions.
 """
+import re
+
 from app.config import get_settings
 from app.llm import get_llm
 from app.schemas import AtsScore, OptimizeResponse, Resume
@@ -38,15 +40,24 @@ def _find(drafts: list, index: int, key: tuple[str, ...], key_of) -> object | No
     return next((d for d in drafts if key_of(d) == key), None)
 
 
+def _numbers(text: str) -> set[str]:
+    return {n.replace(",", "") for n in re.findall(r"\d[\d,]*(?:\.\d+)?", text)}
+
+
 def preserve_facts(source: Resume, draft: Resume) -> Resume:
     """Enforce the truthfulness rules in code, whatever the model returned: contact details,
     employers, titles, dates, locations, project names and education always come from the source.
-    An entry the model renamed or dropped keeps its original bullets."""
+    An entry the model renamed or dropped keeps its original bullets, and so does an entry (or the
+    summary) whose rewrite introduced a number the source doesn't contain."""
+    known = _numbers(source.model_dump_json())
+    invents = lambda *texts: not _numbers(" ".join(texts)) <= known  # noqa: E731
+
     exp_key = lambda e: _key(e.company, e.title)  # noqa: E731
     experience = []
     for i, src in enumerate(source.experience):
         new = _find(draft.experience, i, exp_key(src), exp_key)
-        experience.append(src.model_copy(update={"bullets": new.bullets}) if new and new.bullets else src)
+        ok = new and new.bullets and not invents(*new.bullets)
+        experience.append(src.model_copy(update={"bullets": new.bullets}) if ok else src)
 
     proj_key = lambda p: _key(p.name)  # noqa: E731
     projects = []
@@ -54,9 +65,16 @@ def preserve_facts(source: Resume, draft: Resume) -> Resume:
         new = _find(draft.projects, i, proj_key(src), proj_key)
         projects.append(
             src.model_copy(update={"stack": new.stack or src.stack, "bullets": new.bullets or src.bullets})
-            if new
+            if new and not invents(new.stack, *new.bullets)
             else src
         )
+
+    summary = draft.summary if draft.summary and not invents(draft.summary) else source.summary
+    accomplishments = (
+        draft.accomplishments
+        if draft.accomplishments and not invents(*draft.accomplishments)
+        else source.accomplishments
+    )
 
     return draft.model_copy(
         update={
@@ -64,9 +82,9 @@ def preserve_facts(source: Resume, draft: Resume) -> Resume:
             "education": source.education,
             "experience": experience,
             "projects": projects,
-            "summary": draft.summary or source.summary,
+            "summary": summary,
             "skills": draft.skills or source.skills,
-            "accomplishments": draft.accomplishments or source.accomplishments,
+            "accomplishments": accomplishments,
         }
     )
 
