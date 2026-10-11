@@ -69,14 +69,17 @@ export function LinesField({ label, lines, onChange, placeholder, rows = 4 }) {
   )
 }
 
-export function ItemCard({ title, onRemove, children }) {
+export function ItemCard({ title, onRemove, actions, children }) {
   return (
     <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <span className="text-xs font-semibold text-slate-500">{title}</span>
-        <button type="button" className={buttonStyles.link} onClick={onRemove}>
-          Remove
-        </button>
+        <div className="flex items-center gap-2">
+          {actions}
+          <button type="button" className={buttonStyles.link} onClick={onRemove}>
+            Remove
+          </button>
+        </div>
       </div>
       <div className="space-y-2">{children}</div>
     </div>

@@ -55,4 +55,6 @@ export const api = {
   score: (resume, jobDescription) => post('/ats/score', { resume, job_description: jobDescription }),
   optimize: (resume, jobDescription) => post('/ats/optimize', { resume, job_description: jobDescription }),
   email: (resume, theme, to) => post('/resume/email', { resume, theme, to: to || null }),
+  editSection: (sectionName, sectionData, instruction) =>
+    post('/resume/section/edit', { section_name: sectionName, section_data: sectionData, instruction }),
 }

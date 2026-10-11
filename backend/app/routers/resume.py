@@ -14,12 +14,15 @@ from app.schemas import (
     PreviewRequest,
     Resume,
     ResumeWithTheme,
+    SectionEditRequest,
+    SectionEditResponse,
     StoredJobDescription,
     StoredResume,
 )
 from app.services.emailer import send_resume
 from app.services.parser import MAX_PDF_BYTES, parse_resume_pdf
 from app.services.renderer import pdf_filename, render_html, render_pdf
+from app.services.section_editor import edit_section
 from app.themes import THEMES, ThemeInfo
 
 router = APIRouter(tags=["resume"])
@@ -33,6 +36,12 @@ async def parse_resume(file: Annotated[UploadFile, File(description="Existing re
     if len(data) > MAX_PDF_BYTES:
         raise AppError("That PDF is larger than 10 MB.", status_code=413, code="file_too_large")
     return await parse_resume_pdf(data)
+
+
+@router.post("/resume/section/edit", response_model=SectionEditResponse)
+async def edit_resume_section(body: SectionEditRequest) -> SectionEditResponse:
+    data = await edit_section(body.section_name, body.section_data, body.instruction)
+    return SectionEditResponse(section_name=body.section_name, section_data=data)
 
 
 @router.post("/resume", response_model=StoredResume)

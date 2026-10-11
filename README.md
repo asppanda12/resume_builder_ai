@@ -129,6 +129,7 @@ The resume is written by `POST /resume` (the **Save** button). The JD and its sc
 | `POST` | `/resume/preview` | `{resume, theme, format: "html" \| "pdf"}` → HTML or PDF |
 | `POST` | `/ats/score` | `{resume, job_description}` → score breakdown |
 | `POST` | `/ats/optimize` | `{resume, job_description}` → optimized resume, original and final scores |
+| `POST` | `/resume/section/edit` | `{section_name, section_data, instruction}` → the same section with the instruction applied. `section_name` is `summary`, `skills`, `experience_entry`, `project_entry`, `education` or `accomplishments`. |
 | `POST` | `/resume/email` | `{resume, theme, to?}` → renders the PDF and emails it |
 | `GET` | `/health` | Liveness check |
 

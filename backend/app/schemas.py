@@ -1,6 +1,6 @@
 """Pydantic models: the canonical resume object (spec §5) and the API request/response bodies."""
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import AfterValidator, BaseModel, EmailStr, Field, StringConstraints
 
@@ -104,6 +104,17 @@ class JobMatchRequest(BaseModel):
     job_description: JobDescriptionText
 
 
+SectionName = Literal["summary", "skills", "experience_entry", "project_entry", "education", "accomplishments"]
+
+
+class SectionEditRequest(BaseModel):
+    section_name: SectionName
+    # A string (summary), a list (skills, education, accomplishments) or one entry object
+    # (experience_entry, project_entry). Validated against the matching schema in section_editor.
+    section_data: Any
+    instruction: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=500)]
+
+
 # --- Responses ------------------------------------------------------------------
 
 
@@ -142,3 +153,8 @@ class OptimizeResponse(BaseModel):
 
 class EmailResponse(BaseModel):
     sent_to: str
+
+
+class SectionEditResponse(BaseModel):
+    section_name: SectionName
+    section_data: Any
